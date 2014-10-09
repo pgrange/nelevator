@@ -28,6 +28,11 @@ engine = require('./engine')
 #    * nothing happened :
 #    { "event": "nothing" }
 #
+# PUT /<id>
+# -> Creates or reset an elevator. This will result
+#    in elevator <id> being a brand new elevator
+#    places at floor 0 with doors closed.
+#
 # PUT /<id>/<command>
 # -> receive next command of the elevator <id>.
 #    Return HTTP/200 for valid command.
@@ -35,9 +40,6 @@ engine = require('./engine')
 #    elevator is asking to go higher than the last floor.
 #
 #    Command can be one of UP, DOWN, OPEN, CLOSE
-#
-#    Command can also be RESET. In that case, it resets the
-#    state of the elevator.
 #
 # WARNING ! An elevator should ask for next event before
 # sending a command every time. Or it may loose some events.
