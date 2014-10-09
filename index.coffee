@@ -16,9 +16,14 @@ app.put '/:elevator', (req, res) ->
   res.send(engine.reset elevator)
 
 app.get '/:elevator', (req, res) ->
-  elevator = req.param('elevator')
-  res.send(engine.get elevator)
-  console.log JSON.stringify engine.elevators
+  try 
+    elevator = req.param('elevator')
+    current = engine.get elevator
+    res.send(current)
+    console.log JSON.stringify engine.elevators
+  catch error
+    res.status(403)
+    res.type('txt').send('Forbidden')
 
 app.put '/:elevator/:command', (req, res) ->
   elevator = req.param('elevator')
