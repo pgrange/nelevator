@@ -1,12 +1,17 @@
 SRC=$(wildcard *.coffee)
 JS=$(SRC:.coffee=.js)
+NODE=node
 NODE_UNIT=./node_modules/nodeunit/bin/nodeunit
 COFFEE=./node_modules/coffee-script/bin/coffee
 
 help:
+	@echo "\tmake run: run engine"
 	@echo "\tmake test: run tests"
 	@echo "\tmake clean: clean all build files"
 	@echo "\tmake dist-clean: purge all generated file, node modules..."
+
+run: test
+	$(NODE) index
 
 test: compile
 	$(NODE_UNIT) test*.js
