@@ -44,7 +44,7 @@ tick = (elevator) ->
     go elevator, has_to_go_to_floor
   else if elevator.open and elevator.inside[elevator.floor] > 0
     exit elevator
-  else if elevator.open and elevator.waiting[elevator.floor]
+  else if elevator.open and elevator.waiting[elevator.floor].length > 0
     enter elevator
   else
     next_step elevator

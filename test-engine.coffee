@@ -142,3 +142,23 @@ exports.testEngineShouldSupportBlindElevators = (test) ->
     people: 1
 
   test.done()
+
+exports.testWhenPeopleAreInTheyAreIn = (test) ->
+  engine.scenario [{from: 0,to: [1]},null,null,null,null]
+  engine.reset '12043'
+  engine.put('12043', 'OPEN')
+
+  test.deepEqual engine.get('12043'),
+    event: "enter"
+    people: 1
+
+  test.deepEqual engine.get('12043'),
+    event: "go"
+    floor: 1
+
+  test.deepEqual engine.get('12043'),
+    event: "nothing"
+
+  test.done()
+
+
