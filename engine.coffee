@@ -44,7 +44,7 @@ tick = (elevator) ->
     go elevator, has_to_go_to_floor
   else if elevator.open and elevator.inside[elevator.floor] > 0
     exit elevator
-  else if elevator.open and elevator.waiting[elevator.floor].length > 0
+  else if elevator.open and waiting elevator, elevator.floor
     enter elevator
   else
     next_step elevator
@@ -86,4 +86,8 @@ next_step = (elevator) ->
     event: "nothing"
 
 has_to_go_to_floors = (elevator) ->
-  floor for floor, people in elevator.inside when people > 0 and floor not in elevator.going
+  floor for people, floor in elevator.inside when people > 0 and floor not in elevator.going
+
+waiting = (elevator, floor) ->
+  elevator.waiting[elevator.floor] and
+  elevator.waiting[elevator.floor].length > 0

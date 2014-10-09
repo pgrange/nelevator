@@ -102,14 +102,15 @@ exports.testPeopleShouldGoInIfOpenAtFloor = (test) ->
   test.done()
 
 exports.testPeopleShouldPressButtonWhenIn = (test) ->
-  engine.scenario [{from: 0,to: [1]},null]
+  engine.scenario [{from: 1,to: [2]},null,null]
   engine.reset '12043'
+  engine.put('12043', 'UP')
   engine.put('12043', 'OPEN')
   engine.get('12043') #people enter
 
   test.deepEqual engine.get('12043'),
     event: "go"
-    floor: 1
+    floor: 2
 
   test.done()
 
@@ -143,7 +144,7 @@ exports.testEngineShouldSupportBlindElevators = (test) ->
 
   test.done()
 
-exports.testWhenPeopleAreInTheyAreIn = (test) ->
+exports.testFIXWhenPeopleAreInTheyAreIn = (test) ->
   engine.scenario [{from: 0,to: [1]},null,null,null,null]
   engine.reset '12043'
   engine.put('12043', 'OPEN')
@@ -161,4 +162,12 @@ exports.testWhenPeopleAreInTheyAreIn = (test) ->
 
   test.done()
 
+exports.testFIXDoNotFailWhenNoOneEverWaitedAtFloorAndOpen = (test) ->
+  engine.scenario [{from: 1,to: [2]},null,null,null,null]
+  engine.reset '12043'
+  engine.put('12043', 'OPEN')
 
+  test.deepEqual engine.get('12043'),
+    event: "nothing"
+
+  test.done()
