@@ -203,3 +203,12 @@ exports.checks = nodeunit.testCase
     , engine.DoorsOpenMove)
 
     test.done()
+
+  testShouldFailForUnknownCommands: (test) ->
+
+    test.throws(() ->
+      engine.reset('12043')
+      engine.put('12043', 'DTC')
+    , engine.UnknownCommand)
+
+    test.done()

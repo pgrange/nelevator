@@ -30,6 +30,7 @@ exports.put = (id, command) ->
     when 'DOWN'  then down elevator
     when 'OPEN'  then open elevator
     when 'CLOSE' then close elevator
+    else throw new exports.UnknownCommand()
 
 up = (elevator) ->
   throw new exports.DoorsOpenMove() if elevator.open
@@ -101,3 +102,4 @@ waiting = (elevator, floor) ->
 
 exports.Uninitialized = () ->
 exports.DoorsOpenMove = () ->
+exports.UnknownCommand = () ->
