@@ -336,14 +336,14 @@ exports.scoring = nodeunit.testCase
 
     test.done()
 
-  #testElevatorShouldKeepItsNameAfterReset: (test) ->
-  #  engine.purge()
-  #  engine.reset('12043', 'Best elevator ever !')
-  #  engine.reset('12043')
+  testElevatorShouldKeepItsNameAfterReset: (test) ->
+    engine.purge()
+    engine.reset('12043', 'Best elevator ever !')
+    engine.reset('12043')
 
-  #  test.deepEqual engine.scores(), [
-  #    name: 'Best elevator ever !'
-  #    score: 0
-  #  ]
+    test.deepEqual engine.scores(), [
+      name: 'Best elevator ever !'
+      score: 0
+    ]
 
-  #  test.done()
+    test.done()

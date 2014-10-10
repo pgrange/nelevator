@@ -18,14 +18,18 @@ exports.building = (value) ->
   building = value
 
 exports.reset = (id, name) ->
-  elevators[id] =
+  elevator = elevators[id] ?
     id: id
     name: name ? 'John Do'
-    floor: 0
     next_step: 0
-    waiting: []
     going: []
     inside: []
+  elevator.reset = true
+  elevator.floor = 0
+  elevator.waiting = []
+  elevator.going = []
+  elevator.inside = []
+  elevators[id] = elevator
 
 exports.score = (id) ->
   score(id)
@@ -35,14 +39,14 @@ exports.scores = () ->
 
 exports.get = (id) ->
   elevator = elevators[id]
-  throw new exports.Uninitialized(id) unless elevator
+  throw new exports.Uninitialized(id) unless elevator?.reset
 
   elevator.just_called_get = true
   tick elevator
 
 exports.put = (id, command) ->
   elevator = elevators[id]
-  throw new exports.Uninitialized() unless elevator
+  throw new exports.Uninitialized(id) unless elevator?.reset
 
   tick elevator unless elevator.just_called_get
   elevator.just_called_get = false
@@ -143,4 +147,4 @@ exports.NoSuchFloor = (elevator) ->
 
 destroy = (elevator) ->
   score elevator.id, -100
-  elevators[elevator.id] = null
+  elevator.reset = false
