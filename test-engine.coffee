@@ -313,7 +313,7 @@ exports.scoring = nodeunit.testCase
 
     test.done()
 
-  testOnCanGiveANameToItsElevatorToDisplayInScores: (test) ->
+  testOneCanGiveANameToItsElevatorToDisplayInScores: (test) ->
     engine.purge()
     engine.reset('12043', 'Best elevator ever !')
 
