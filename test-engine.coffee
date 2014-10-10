@@ -212,3 +212,37 @@ exports.checks = nodeunit.testCase
     , engine.UnknownCommand)
 
     test.done()
+
+  testShouldFailWhenNotResettingAfterError: (test) ->
+    
+    engine.reset('12043')
+    try
+      engine.put('12043', 'DTC')
+    catch
+      # ignore
+
+    test.throws(() ->
+      engine.get('12043')
+    , engine.Uninitialized)
+
+    test.done()
+
+  testShouldFailWhenDiggingThroughTheGround: (test) ->
+    engine.building {min: 0,max: 0}
+    engine.reset('12043')
+
+    test.throws(() ->
+      engine.put('12043', 'DOWN')
+    , engine.NoSuchFloor)
+
+    test.done()
+
+  testShouldFailWhenFlyingOverTheCeiling: (test) ->
+    engine.building {min: 0,max: 0}
+    engine.reset('12043')
+
+    test.throws(() ->
+      engine.put('12043', 'UP')
+    , engine.NoSuchFloor)
+
+    test.done()

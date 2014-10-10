@@ -1,4 +1,5 @@
 scenario = []
+building = {min: 0, max: 6}
 elevators = {}
 
 exports.elevators = elevators #debug
@@ -6,8 +7,12 @@ exports.elevators = elevators #debug
 exports.scenario = (value) ->
   scenario = value
 
+exports.building = (value) ->
+  building = value
+
 exports.reset = (id) ->
   elevators[id] =
+    id: id
     floor: 0
     next_step: 0
     waiting: []
@@ -17,11 +22,14 @@ exports.reset = (id) ->
 exports.get = (id) ->
   elevator = elevators[id]
   throw new exports.Uninitialized() unless elevator
+
   elevator.just_called_get = true
   tick elevator
 
 exports.put = (id, command) ->
   elevator = elevators[id]
+  throw new exports.Uninitialized() unless elevator
+
   tick elevator unless elevator.just_called_get
   elevator.just_called_get = false
 
@@ -30,14 +38,16 @@ exports.put = (id, command) ->
     when 'DOWN'  then down elevator
     when 'OPEN'  then open elevator
     when 'CLOSE' then close elevator
-    else throw new exports.UnknownCommand()
+    else throw new exports.UnknownCommand(elevator)
 
 up = (elevator) ->
-  throw new exports.DoorsOpenMove() if elevator.open
+  throw new exports.DoorsOpenMove(elevator) if elevator.open
+  throw new exports.NoSuchFloor(elevator) if elevator.floor == building.max
   elevator.floor += 1
 
 down = (elevator) ->
-  throw new exports.DoorsOpenMove() if elevator.open
+  throw new exports.DoorsOpenMove(elevator) if elevator.open
+  throw new exports.NoSuchFloor(elevator) if elevator.floor == building.min
   elevator.floor -= 1
 
 open = (elevator) ->
@@ -100,6 +110,13 @@ waiting = (elevator, floor) ->
   elevator.waiting[elevator.floor] and
   elevator.waiting[elevator.floor].length > 0
 
-exports.Uninitialized = () ->
-exports.DoorsOpenMove = () ->
-exports.UnknownCommand = () ->
+exports.Uninitialized  = () ->
+exports.DoorsOpenMove  = (elevator) ->
+  destroy elevator
+exports.UnknownCommand = (elevator) ->
+  destroy elevator
+exports.NoSuchFloor = (elevator) ->
+  destroy elevator
+
+destroy = (elevator) ->
+  elevators[elevator.id] = null
