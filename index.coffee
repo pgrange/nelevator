@@ -21,6 +21,7 @@ app.get '/:elevator', (req, res) ->
     current = engine.get elevator
     res.send(current)
     console.log JSON.stringify engine.elevators
+    console.log JSON.stringify engine.scores
   catch error
     res.status(403)
     res.type('txt').send('Forbidden')

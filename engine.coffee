@@ -4,6 +4,7 @@ elevators = {}
 scores = {}
 
 exports.elevators = elevators #debug
+exports.scores = scores #debug
 
 exports.scenario = (value) ->
   scenario = value
