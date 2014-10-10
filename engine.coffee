@@ -1,6 +1,7 @@
 scenario = []
 building = {min: 0, max: 6}
 elevators = {}
+scores = {}
 
 exports.elevators = elevators #debug
 
@@ -19,9 +20,12 @@ exports.reset = (id) ->
     going: []
     inside: []
 
+exports.score = (id) ->
+  score(id)
+
 exports.get = (id) ->
   elevator = elevators[id]
-  throw new exports.Uninitialized() unless elevator
+  throw new exports.Uninitialized(id) unless elevator
 
   elevator.just_called_get = true
   tick elevator
@@ -76,6 +80,7 @@ go = (elevator, floor) ->
 exit = (elevator) ->
   people = elevator.inside[elevator.floor]
   elevator.inside[elevator.floor] = 0
+  score elevator.id, people * 10
 
   event: "exit"
   people: people
@@ -110,7 +115,15 @@ waiting = (elevator, floor) ->
   elevator.waiting[elevator.floor] and
   elevator.waiting[elevator.floor].length > 0
 
-exports.Uninitialized  = () ->
+score = (id, increment) ->
+  current = scores[id] ? 0
+  current += increment if increment
+  scores[id] = current
+  current
+
+
+exports.Uninitialized  = (id) ->
+  score id, -100
 exports.DoorsOpenMove  = (elevator) ->
   destroy elevator
 exports.UnknownCommand = (elevator) ->
@@ -119,4 +132,5 @@ exports.NoSuchFloor = (elevator) ->
   destroy elevator
 
 destroy = (elevator) ->
+  score elevator.id, -100
   elevators[elevator.id] = null

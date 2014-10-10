@@ -246,3 +246,36 @@ exports.checks = nodeunit.testCase
     , engine.NoSuchFloor)
 
     test.done()
+
+exports.scoring = nodeunit.testCase
+  # 1 people reaching its floor : + 10
+  # elevator crashing           : -100
+  testElevatorStartsWithZeroPoints: (test) ->
+    engine.reset('zero')
+
+    test.equals 0, engine.score('zero')
+
+    test.done()
+
+  testElevatorGainPointsWhenPeopleReachTheirFloor: (test) ->
+    engine.scenario([{from: 0, to: [0, 0]},null,null])
+    engine.reset('1people')
+    engine.put('1people', 'OPEN')
+    engine.put('1people', 'CLOSE')
+    engine.put('1people', 'OPEN')
+    engine.get('1people')
+
+    test.equals 20, engine.score('1people')
+
+    test.done()
+
+  testElevatorLoosePointsForInvalidMove: (test) ->
+    engine.reset('crash')
+    try
+      engine.put('crash', 'DOWN')
+    catch
+      #ignore
+
+    test.equals -100, engine.score('crash')
+
+    test.done()
