@@ -1,10 +1,15 @@
-scenario = []
-building = {min: 0, max: 6}
-elevators = {}
-scores = {}
+scenario  = null
+building  = null
+elevators = null
+scores    = null
 
-exports.elevators = elevators #debug
-exports.scores = scores #debug
+exports.purge = () ->
+  scenario = []
+  building = {min: 0, max: 6}
+  elevators = {}
+  scores = {}
+  exports.elevators = elevators #debug
+exports.purge()
 
 exports.scenario = (value) ->
   scenario = value
@@ -12,9 +17,10 @@ exports.scenario = (value) ->
 exports.building = (value) ->
   building = value
 
-exports.reset = (id) ->
+exports.reset = (id, name) ->
   elevators[id] =
     id: id
+    name: name ? 'John Do'
     floor: 0
     next_step: 0
     waiting: []
@@ -23,6 +29,9 @@ exports.reset = (id) ->
 
 exports.score = (id) ->
   score(id)
+
+exports.scores = () ->
+  {name: elevator.name, score: score(id)} for id, elevator of elevators
 
 exports.get = (id) ->
   elevator = elevators[id]

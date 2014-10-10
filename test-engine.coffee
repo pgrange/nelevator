@@ -279,3 +279,47 @@ exports.scoring = nodeunit.testCase
     test.equals -100, engine.score('crash')
 
     test.done()
+
+  testScoresDoNotContainElevatorId: (test) ->
+    engine.purge()
+    engine.scenario [{from: 0, to: [1, 2]},null,null,null,null]
+    engine.reset('1')
+    engine.reset('2')
+    engine.put('2', 'OPEN')
+    engine.put('2', 'CLOSE')
+    engine.put('2', 'UP')
+    engine.put('2', 'OPEN')
+    engine.put('2', 'CLOSE')
+    engine.reset('3')
+    engine.put('3', 'OPEN')
+    engine.put('3', 'CLOSE')
+    engine.put('3', 'UP')
+    engine.put('3', 'OPEN')
+    engine.put('3', 'CLOSE')
+    engine.put('3', 'UP')
+    engine.put('3', 'OPEN')
+    engine.put('3', 'CLOSE')
+ 
+    test.deepEqual engine.scores(), [
+      name: 'John Do'
+      score: 0
+    ,
+      name: 'John Do'
+      score: 10
+    ,
+      name: 'John Do'
+      score: 20
+    ]
+
+    test.done()
+
+  testOnCanGiveANameToItsElevatorToDisplayInScores: (test) ->
+    engine.purge()
+    engine.reset('12043', 'Best elevator ever !')
+
+    test.deepEqual engine.scores(), [
+      name: 'Best elevator ever !'
+      score: 0
+    ]
+
+    test.done()
