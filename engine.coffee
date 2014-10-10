@@ -16,6 +16,7 @@ exports.reset = (id) ->
 
 exports.get = (id) ->
   elevator = elevators[id]
+  throw new exports.Uninitialized() unless elevator
   elevator.just_called_get = true
   tick elevator
 
@@ -26,11 +27,17 @@ exports.put = (id, command) ->
 
   switch command
     when 'UP'    then up elevator
+    when 'DOWN'  then down elevator
     when 'OPEN'  then open elevator
     when 'CLOSE' then close elevator
 
 up = (elevator) ->
+  throw new exports.DoorsOpenMove() if elevator.open
   elevator.floor += 1
+
+down = (elevator) ->
+  throw new exports.DoorsOpenMove() if elevator.open
+  elevator.floor -= 1
 
 open = (elevator) ->
   elevator.open = true
@@ -91,3 +98,6 @@ has_to_go_to_floors = (elevator) ->
 waiting = (elevator, floor) ->
   elevator.waiting[elevator.floor] and
   elevator.waiting[elevator.floor].length > 0
+
+exports.Uninitialized = () ->
+exports.DoorsOpenMove = () ->
