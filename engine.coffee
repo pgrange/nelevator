@@ -1,10 +1,17 @@
-scenario = []
-building = {min: 0, max: 6}
-elevators = {}
-scores = {}
+scenario  = null
+building  = null
+elevators = null
+scores    = null
+patience  = null
 
-exports.elevators = elevators #debug
-exports.scores = scores #debug
+exports.purge = () ->
+  scenario = []
+  building = {min: 0, max: 6}
+  elevators = {}
+  scores = {}
+  patience = 100
+  exports.elevators = elevators #debug
+exports.purge()
 
 exports.scenario = (value) ->
   scenario = value
@@ -12,28 +19,39 @@ exports.scenario = (value) ->
 exports.building = (value) ->
   building = value
 
-exports.reset = (id) ->
-  elevators[id] =
+exports.patience = (value) ->
+  patience = value
+
+exports.reset = (id, name) ->
+  elevator = elevators[id] ?
     id: id
-    floor: 0
-    next_step: 0
-    waiting: []
+    name: name ? 'John Do'
+    tick: 0
     going: []
     inside: []
+  elevator.reset = true
+  elevator.floor = 0
+  elevator.waiting = []
+  elevator.going = []
+  elevator.inside = []
+  elevators[id] = elevator
 
 exports.score = (id) ->
   score(id)
 
+exports.scores = () ->
+  {name: elevator.name, score: score(id)} for id, elevator of elevators
+
 exports.get = (id) ->
   elevator = elevators[id]
-  throw new exports.Uninitialized(id) unless elevator
+  throw new exports.Uninitialized(id) unless elevator?.reset
 
   elevator.just_called_get = true
   tick elevator
 
 exports.put = (id, command) ->
   elevator = elevators[id]
-  throw new exports.Uninitialized() unless elevator
+  throw new exports.Uninitialized(id) unless elevator?.reset
 
   tick elevator unless elevator.just_called_get
   elevator.just_called_get = false
@@ -87,8 +105,8 @@ exit = (elevator) ->
   people: people
 
 enter = (elevator) ->
-  for dest_floor in elevator.waiting[elevator.floor]
-    elevator.inside[dest_floor] = (elevator.inside[dest_floor] ? 0) + 1
+  for waiter in elevator.waiting[elevator.floor]
+    elevator.inside[waiter.dest] = (elevator.inside[waiter.dest] ? 0) + 1
 
   people = elevator.waiting[elevator.floor].length
   elevator.waiting[elevator.floor] = []
@@ -97,12 +115,13 @@ enter = (elevator) ->
   people: people
 
 next_step = (elevator) ->
-  step = scenario[elevator.next_step]
-  elevator.next_step = (elevator.next_step + 1) % scenario.length
+  step = scenario[elevator.tick % scenario.length]
+  elevator.tick += 1
 
   if step
-    elevator.waiting[step.from] =
-      (elevator.waiting[step.from] ? []).concat step.to
+    elevator.waiting[step.from] ?= []
+    for dest in step.to
+      elevator.waiting[step.from].push {dest: dest, tick: elevator.tick}
 
     event: "call"
     floor: step.from
@@ -113,7 +132,12 @@ has_to_go_to_floors = (elevator) ->
   floor for people, floor in elevator.inside when people > 0 and floor not in elevator.going
 
 waiting = (elevator, floor) ->
-  elevator.waiting[elevator.floor] and
+  # First, remove bored waiters
+  elevator.waiting[elevator.floor] =
+    for waiter in elevator.waiting[elevator.floor] ? [] \
+    when elevator.tick - waiter.tick < patience
+      waiter
+
   elevator.waiting[elevator.floor].length > 0
 
 score = (id, increment) ->
@@ -134,4 +158,4 @@ exports.NoSuchFloor = (elevator) ->
 
 destroy = (elevator) ->
   score elevator.id, -100
-  elevators[elevator.id] = null
+  elevator.reset = false
