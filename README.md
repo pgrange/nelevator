@@ -1,4 +1,4 @@
-# Nelevator [![Build Status](https://travis-ci.org/pgrange/nelevator.svg?branch=master)](https://travis-ci.org/lmazardo/nelevator)
+# Nelevator [![Build Status](https://travis-ci.org/pgrange/nelevator.svg?branch=master)](https://travis-ci.org/pgrange/nelevator)
 
 An http elevator engine, just for fun.
 
