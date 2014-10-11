@@ -33,7 +33,13 @@ $> curl localhost:12045/scores
 
 ## Register a new elevator
 
-Before playing with your elevator, you have to register it.
+Before playing with your elevator, you have to register it. To do that, choose a ''secret'' id for your elevator. You will use this ''id'' later to identify your elevator to the engine. Do not share this id too much... Also choose a name for your elevator. The name will be displayed in scores.
+
+When you made your choice ''put'' it in the engine:
+
+```
+PUT /<elevator id>/name/<elevator name>
+```
 
 ## REST API
 
