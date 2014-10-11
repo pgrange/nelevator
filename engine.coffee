@@ -2,12 +2,14 @@ scenario  = null
 building  = null
 elevators = null
 scores    = null
+patience  = null
 
 exports.purge = () ->
   scenario = []
   building = {min: 0, max: 6}
   elevators = {}
   scores = {}
+  patience = 100
   exports.elevators = elevators #debug
 exports.purge()
 
@@ -16,6 +18,9 @@ exports.scenario = (value) ->
 
 exports.building = (value) ->
   building = value
+
+exports.patience = (value) ->
+  patience = value
 
 exports.reset = (id, name) ->
   elevator = elevators[id] ?
@@ -116,7 +121,7 @@ next_step = (elevator) ->
   if step
     elevator.waiting[step.from] ?= []
     for dest in step.to
-      elevator.waiting[step.from].push {dest: dest, tick: tick}
+      elevator.waiting[step.from].push {dest: dest, tick: elevator.tick}
 
     event: "call"
     floor: step.from
@@ -127,7 +132,12 @@ has_to_go_to_floors = (elevator) ->
   floor for people, floor in elevator.inside when people > 0 and floor not in elevator.going
 
 waiting = (elevator, floor) ->
-  elevator.waiting[elevator.floor] and
+  # First, remove bored waiters
+  elevator.waiting[elevator.floor] =
+    for waiter in elevator.waiting[elevator.floor] ? [] \
+    when elevator.tick - waiter.tick < patience
+      waiter
+
   elevator.waiting[elevator.floor].length > 0
 
 score = (id, increment) ->

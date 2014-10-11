@@ -347,3 +347,22 @@ exports.scoring = nodeunit.testCase
     ]
 
     test.done()
+
+exports.timeout = nodeunit.testCase
+  setUp: (done) ->
+    engine.purge()
+    done()
+
+  testPeopleUseStairsOrDieAfterTooMuchTimeWaiting: (test) ->
+    engine.patience(1)
+    engine.scenario [{from: 0, to: [1]}, null, null,null]
+    engine.reset('12043')
+    engine.get('12043') #people called
+    engine.get('12043') #people waited one tick... already bored
+
+    engine.put('12043', 'OPEN') #too late
+
+    test.deepEqual engine.get('12043'),
+      event: "nothing"
+ 
+    test.done()
