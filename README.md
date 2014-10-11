@@ -53,7 +53,7 @@ For instance :
 $> curl -X PUT localhost:12045/secret123/master_elevator
 ```
 
-## Get events for you elevator
+## Get events for your elevator
 
 Events are occuring in the building. People are calling for the elevator to come at some floors, people are entering and exiting the elevator or asking to go to a given floor.
 
