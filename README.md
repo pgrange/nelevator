@@ -112,7 +112,11 @@ This request will fail with HTTP/403 if you try to make an illegal move. For ins
 
 ## Reset your elevator after a crash
 
- PUT /<id>
- -> Creates or reset an elevator. This will result
-    in elevator <id> being a brand new elevator
-    places at floor 0 with doors closed.
+After your elevator crashed, you are not allowed to put order or get next event until you have reset your elevator. Trying to put order or getting events on a crashed or unexisting elevator will make you loose points (yes, a not yet existing elevator can loose points).
+
+To reset an elevator, just put on its resource :
+
+```
+PUT /<elevator id>
+```
+
