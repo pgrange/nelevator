@@ -31,6 +31,10 @@ For instance :
 $> curl localhost:12045/scores
 ```
 
+## Register a new elevator
+
+Before playing with your elevator, you have to register it.
+
 ## REST API
 
  GET /<id>
