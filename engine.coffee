@@ -21,7 +21,7 @@ exports.reset = (id, name) ->
   elevator = elevators[id] ?
     id: id
     name: name ? 'John Do'
-    next_step: 0
+    tick: 0
     going: []
     inside: []
   elevator.reset = true
@@ -110,8 +110,8 @@ enter = (elevator) ->
   people: people
 
 next_step = (elevator) ->
-  step = scenario[elevator.next_step]
-  elevator.next_step = (elevator.next_step + 1) % scenario.length
+  step = scenario[elevator.tick % scenario.length]
+  elevator.tick += 1
 
   if step
     elevator.waiting[step.from] =
