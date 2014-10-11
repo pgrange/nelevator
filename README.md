@@ -19,6 +19,18 @@ Engine is ready for new elevators to connect to it at http://localhost:12045
 
 ## Take a look at scores
 
+Not so fun to do while noone has started to play yet but from time to time you may want to look at the scores of the registered elevators. The ''scores'' resource will give you this :
+
+```
+GET /scores
+```
+
+For instance :
+
+```bash
+curl localhost:12045/scores
+```
+
 ## REST API
 
  GET /<id>
