@@ -63,33 +63,30 @@ For instance :
 $> curl localhost:12045/secret123
 ```
 
-## REST API
+The next event for elevator <id> is returned as a JSON object. Event can be one of ''call'', ''go'', ''enter'', ''exit'' or ''nothing''.
 
- GET /<id>
- -> return next event for elevator <id> as a JSON object.
-    Return HTTP/400 if elevator is not in a state to
-    receive new event. For instance if it has not made
-    any move between two GET requests.
-
-    Event can be one of call, go, enter, exit or nothing.
-    * elevator called at second floor :
+For instance:
+* elevator called at second floor :
     { "event": "call",
       "floor": 2 }
 
-    * elevator asked to go to third floor :
+* elevator asked to go to third floor :
     { "event": "go",
       "floor": 3 }
 
-    * 2 people have entered the elevator :
+* 2 people have entered the elevator :
     { "event": "enter",
       "people": 2 }
 
-    * 1 people have exited the elevator :
+* 1 people have exited the elevator :
     { "event": "exit",
       "people": 1 }
 
-    * nothing happened :
+* nothing happened :
     { "event": "nothing" }
+    
+ 
+ This request will fail with HTTP/403 if you try to get next event for a crashed or unitialized elevator. See how to register a new elevator or reset a crashed one for more information.
 
  PUT /<id>
  -> Creates or reset an elevator. This will result
