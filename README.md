@@ -41,6 +41,28 @@ When you made your choice ''put'' it in the engine:
 PUT /<elevator id>/name/<elevator name>
 ```
 
+For instance :
+
+```bash
+$> curl -X PUT localhost:12045/secret123/master_elevator
+```
+
+## Get events for you elevator
+
+Events are occuring in the building. People are calling for the elevator to come at some floors, people are entering and exiting the elevator or asking to go to a given floor.
+
+To get this events and act accordingly, you have to request it from the engine for your elevator:
+
+```
+GET /<elevator id>
+```
+
+For instance :
+
+```bash
+$> curl localhost:12045/secret123
+```
+
 ## REST API
 
  GET /<id>
