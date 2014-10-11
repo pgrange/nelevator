@@ -63,30 +63,23 @@ For instance :
 $> curl localhost:12045/secret123
 ```
 
-The next event for elevator <id> is returned as a JSON object. Event can be one of ''call'', ''go'', ''enter'', ''exit'' or ''nothing''.
+The next event for elevator <id> is returned as a JSON object. Event can be one of `call`, `go`, `enter`, `exit` or `nothing`.
 
 For instance:
-* elevator called at second floor :
-    { "event": "call",
-      "floor": 2 }
+* elevator called at second floor : `{ "event": "call", "floor": 2 }`
 
-* elevator asked to go to third floor :
-    { "event": "go",
-      "floor": 3 }
+* elevator asked to go to third floor : `{ "event": "go", "floor": 3 }`
 
-* 2 people have entered the elevator :
-    { "event": "enter",
-      "people": 2 }
+* 2 people have entered the elevator : `{ "event": "enter", "people": 2 }`
 
-* 1 people have exited the elevator :
-    { "event": "exit",
-      "people": 1 }
+* 1 people have exited the elevator : `{ "event": "exit", "people": 1 }`
 
-* nothing happened :
-    { "event": "nothing" }
+* nothing happened : `{ "event": "nothing" }`
     
  
  This request will fail with HTTP/403 if you try to get next event for a crashed or unitialized elevator. See how to register a new elevator or reset a crashed one for more information.
+
+## Put order for your elevator
 
  PUT /<id>
  -> Creates or reset an elevator. This will result
