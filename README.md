@@ -33,35 +33,53 @@ $> curl localhost:12045/scores
 
 ## Register a new elevator
 
-Before playing with your elevator, you have to register it.
+Before playing with your elevator, you have to register it. To do that, choose a ''secret'' id for your elevator. You will use this ''id'' later to identify your elevator to the engine. Do not share this id too much... Also choose a name for your elevator. The name will be displayed in scores.
 
-## REST API
+When you made your choice ''put'' it in the engine:
 
- GET /<id>
- -> return next event for elevator <id> as a JSON object.
-    Return HTTP/400 if elevator is not in a state to
-    receive new event. For instance if it has not made
-    any move between two GET requests.
+```
+PUT /<elevator id>/name/<elevator name>
+```
 
-    Event can be one of call, go, enter, exit or nothing.
-    * elevator called at second floor :
-    { "event": "call",
-      "floor": 2 }
+For instance :
 
-    * elevator asked to go to third floor :
-    { "event": "go",
-      "floor": 3 }
+```bash
+$> curl -X PUT localhost:12045/secret123/master_elevator
+```
 
-    * 2 people have entered the elevator :
-    { "event": "enter",
-      "people": 2 }
+## Get events for you elevator
 
-    * 1 people have exited the elevator :
-    { "event": "exit",
-      "people": 1 }
+Events are occuring in the building. People are calling for the elevator to come at some floors, people are entering and exiting the elevator or asking to go to a given floor.
 
-    * nothing happened :
-    { "event": "nothing" }
+To get this events and act accordingly, you have to request it from the engine for your elevator:
+
+```
+GET /<elevator id>
+```
+
+For instance :
+
+```bash
+$> curl localhost:12045/secret123
+```
+
+The next event for elevator <id> is returned as a JSON object. Event can be one of `call`, `go`, `enter`, `exit` or `nothing`.
+
+For instance:
+* elevator called at second floor : `{ "event": "call", "floor": 2 }`
+
+* elevator asked to go to third floor : `{ "event": "go", "floor": 3 }`
+
+* 2 people have entered the elevator : `{ "event": "enter", "people": 2 }`
+
+* 1 people have exited the elevator : `{ "event": "exit", "people": 1 }`
+
+* nothing happened : `{ "event": "nothing" }`
+    
+ 
+ This request will fail with HTTP/403 if you try to get next event for a crashed or unitialized elevator. See how to register a new elevator or reset a crashed one for more information.
+
+## Put order for your elevator
 
  PUT /<id>
  -> Creates or reset an elevator. This will result
