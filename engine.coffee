@@ -100,8 +100,8 @@ exit = (elevator) ->
   people: people
 
 enter = (elevator) ->
-  for dest_floor in elevator.waiting[elevator.floor]
-    elevator.inside[dest_floor] = (elevator.inside[dest_floor] ? 0) + 1
+  for waiter in elevator.waiting[elevator.floor]
+    elevator.inside[waiter.dest] = (elevator.inside[waiter.dest] ? 0) + 1
 
   people = elevator.waiting[elevator.floor].length
   elevator.waiting[elevator.floor] = []
@@ -114,8 +114,9 @@ next_step = (elevator) ->
   elevator.tick += 1
 
   if step
-    elevator.waiting[step.from] =
-      (elevator.waiting[step.from] ? []).concat step.to
+    elevator.waiting[step.from] ?= []
+    for dest in step.to
+      elevator.waiting[step.from].push {dest: dest, tick: tick}
 
     event: "call"
     floor: step.from
