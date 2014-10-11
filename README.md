@@ -81,27 +81,47 @@ For instance:
 
 ## Put order for your elevator
 
- PUT /<id>
- -> Creates or reset an elevator. This will result
-    in elevator <id> being a brand new elevator
-    places at floor 0 with doors closed.
+Know that you know what is happening in the building, you can put order for your elevator to satisfy as many people as you can. Possible orders are `UP`, `DOWN`, `OPEN` and `CLOSE`:
 
- PUT /<id>/<command>
- -> receive next command of the elevator <id>.
-    Return HTTP/200 for valid command.
-    Return HTTP/400 for invalid command, for instance if
-    elevator is asking to go higher than the last floor.
+```
+PUT /<elevator id>/<command>
+```
 
-    Command can be one of UP, DOWN, OPEN, CLOSE
+For instance :
 
- WARNING ! An elevator should ask for next event before
- sending a command every time. Or it may loose some events.
- This sequence :
- GET /12043
- PUT /12043/UP
- PUT /12043/UP
- Is equivalent to this sequence but ignoring second GET :
- GET /12043
- PUT /12043/UP
- GET /12043
- PUT /12043/UP
+```bash
+$> curl -X PUT localhost:12045/secret123/UP
+```
+
+WARNING ! An elevator should ask for next event before sending its next command. Otherwise, it may loose some events. For instance this sequence :
+```
+GET /12043
+PUT /12043/UP
+PUT /12043/UP
+```
+
+Is equivalent to this sequence but ignoring second GET :
+```
+GET /12043
+PUT /12043/UP
+GET /12043
+PUT /12043/UP
+```
+
+This request will fail with HTTP/403 if you try to make an illegal move. For instance if you try to move your elevator while its doors are open or if you go through the ceiling or through the ground of the building. If you crash your elevator in such a way, you will have to reset it before being able to put more orders. See how to reset a crashed one for more information.
+
+## Reset your elevator after a crash
+
+After your elevator crashed, you are not allowed to put order or get next event until you have reset your elevator. Trying to put order or getting events on a crashed or unexisting elevator will make you loose points (yes, a not yet existing elevator can loose points).
+
+To reset an elevator, just put on its resource :
+
+```
+PUT /<elevator id>
+```
+
+## Scores
+
+You will gain points every time someone reaches its destination point.
+
+You will loose points every time your elevator crashes or every time you try to get event or put orders on a crash or not yet existing elevator.
