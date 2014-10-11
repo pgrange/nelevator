@@ -9,9 +9,9 @@ Build your own elevator and connect to the engine to start gaining and loosing p
 You will need nodejs and gnu make. Then git clone the project and run the elevator :
 
 ```bash
-#> git clone git@github.com:pgrange/nelevator.git
-#> cd nelevator
-#> make run
+$> git clone git@github.com:pgrange/nelevator.git
+$> cd nelevator
+$> make run
 ...
 connect to http://localhost:12045
 ```
@@ -28,7 +28,7 @@ GET /scores
 For instance :
 
 ```bash
-curl localhost:12045/scores
+$> curl localhost:12045/scores
 ```
 
 ## REST API
