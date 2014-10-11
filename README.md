@@ -120,3 +120,8 @@ To reset an elevator, just put on its resource :
 PUT /<elevator id>
 ```
 
+## Scores
+
+You will gain points every time someone reaches its destination point.
+
+You will loose points every time your elevator crashes or every time you try to get event or put orders on a crash or not yet existing elevator.
