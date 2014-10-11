@@ -15,7 +15,7 @@ app.put '/:elevator', (req, res) ->
   elevator = req.param('elevator')
   res.send(engine.reset elevator)
 
-app.put '/:elevator/RESET/:name', (req, res) ->
+app.put '/:elevator/name/:name', (req, res) ->
   elevator = req.param('elevator')
   name = req.param('name')
   res.send(engine.reset elevator, name)
