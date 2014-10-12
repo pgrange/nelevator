@@ -4,7 +4,7 @@ express = require('express')
 
 engine = require('./engine')
 engine.scenario [
-  {from: 1, to: 2}
+  {from: 1, to: [2]}
 ]
 
 app = express()
