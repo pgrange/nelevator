@@ -315,3 +315,41 @@ exports.timeout = nodeunit.testCase
       event: "nothing"
  
     test.done()
+
+exports.power = nodeunit.testCase
+  setUp: (done) ->
+    engine.purge()
+    done()
+
+  consumesEnergyOnUP: (test) ->
+    engine.scenario [{from: 0, to: [1]}]
+    engine.reset('12043')
+    engine.get('12043') #people called
+    engine.put('12043', 'UP')
+
+    test.equals 0.04, engine.powerConsumption('12043')
+
+    test.done()
+
+  consumesEnergyOnDown: (test) ->
+    engine.building {min: -1,max: 0}
+    engine.scenario [{from: 0, to: [0]}]
+    engine.reset('12043')
+    engine.get('12043') #people called
+    engine.put('12043', 'DOWN')
+
+    test.equals 0.04, engine.powerConsumption('12043')
+
+    test.done()
+
+  consumesMoreEnergyWhenGoingUpTwice: (test) ->
+    engine.scenario [{from: 0, to: [1]}]
+    engine.reset('12043')
+    engine.get('12043') #people called
+    engine.put('12043', 'UP')
+    engine.get('12043') #people called
+    engine.put('12043', 'UP')
+
+    test.equals 0.08, engine.powerConsumption('12043')
+
+    test.done()
