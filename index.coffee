@@ -18,7 +18,9 @@ app.put '/:elevator', (req, res) ->
 app.put '/:elevator/name/:name', (req, res) ->
   elevator = req.param('elevator')
   name = req.param('name')
+  console.log req.ip + ": " + name + " subscription"
   res.send(engine.reset elevator, name)
+
 
 app.get '/scores', (req, res) ->
   res.send engine.scores()
@@ -29,7 +31,7 @@ app.get '/:elevator', (req, res) ->
     current = engine.get elevator
     res.send(current)
     console.log JSON.stringify engine.elevators
-    console.log JSON.stringify engine.scores
+    console.log JSON.stringify "scores " + engine.scores
   catch error
     res.status(403)
     res.type('txt').send('Forbidden')
