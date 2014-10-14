@@ -3,7 +3,6 @@ building  = null
 elevators = null
 scores    = null
 patience  = null
-powerConsumptions = null
 
 exports.purge = () ->
   scenario = []
@@ -11,7 +10,6 @@ exports.purge = () ->
   elevators = {}
   scores = {}
   patience = 100
-  powerConsumptions = {}
   exports.elevators = elevators #debug
 exports.purge()
 
@@ -31,6 +29,7 @@ exports.reset = (id, name) ->
     tick: 0
     going: []
     inside: []
+    powerConsumption: 0
   elevator.reset = true
   elevator.floor = 0
   elevator.waiting = []
@@ -45,7 +44,7 @@ exports.scores = () ->
   {name: elevator.name, score: score(id)} for id, elevator of elevators
 
 exports.powerConsumption = (id) ->
-  powerConsumption(id)
+  elevators[id].powerConsumption
 
 exports.get = (id) ->
   elevator = elevators[id]
@@ -69,9 +68,7 @@ exports.put = (id, command) ->
     else throw new exports.UnknownCommand(elevator)
 
 computePowerConsumptions = (elevator) ->
-  pc = powerConsumptions[elevator.id] ? 0
-  pc += 0.04
-  powerConsumptions[elevator.id] = pc
+  elevator.powerConsumption += 0.04
     
 preventOpenDoor = (elevator) ->
     throw new exports.DoorsOpenMove(elevator) if elevator.open
@@ -159,9 +156,6 @@ score = (id, increment) ->
   current += increment if increment
   scores[id] = current
   current
-
-powerConsumption = (id) ->
-    powerConsumptions[id] 
 
 exports.Uninitialized  = (id) ->
   score id, -100
