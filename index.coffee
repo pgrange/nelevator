@@ -40,7 +40,8 @@ app.put '/:elevator/:command', (req, res) ->
   try
     elevator = req.param('elevator')
     command = req.param('command')
-    res.send(engine.put elevator, command)
+    engine.put elevator, command
+    res.send(200)
     console.log JSON.stringify engine.elevators
   catch error
     res.status(400)
