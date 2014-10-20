@@ -31,16 +31,20 @@ app.get '/:elevator', (req, res) ->
     current = engine.get elevator
     res.send(current)
     console.log JSON.stringify engine.elevators
-    console.log JSON.stringify "scores " + engine.scores
+    console.log "scores" + JSON.stringify engine.scores()
   catch error
     res.status(403)
     res.type('txt').send('Forbidden')
 
 app.put '/:elevator/:command', (req, res) ->
-  elevator = req.param('elevator')
-  command = req.param('command')
-  res.send(engine.put elevator, command)
-  console.log JSON.stringify engine.elevators
+  try
+    elevator = req.param('elevator')
+    command = req.param('command')
+    res.send(engine.put elevator, command)
+    console.log JSON.stringify engine.elevators
+  catch error
+    res.status(400)
+    res.type('txt').send('Bad Request')
 
 app.listen 12045
 console.log 'connect to http://localhost:12045'
